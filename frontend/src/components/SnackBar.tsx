@@ -16,9 +16,10 @@ interface AutohideSnackbarProps {
           open={open}
           autoHideDuration={2000}
           message={message}
+          onClose={onClose}
         >
             <Alert
-          onClose={onClose}
+    
           severity={severity}
           variant="filled"
           sx={{ width: '100%' }}

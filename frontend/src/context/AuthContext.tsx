@@ -72,8 +72,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
+        console.log('error',error);
         setSeverity('error');
-        setMessage(error.message);
+        setMessage('user already exists');
         setSnackbarOpen(true);
       }
   }
