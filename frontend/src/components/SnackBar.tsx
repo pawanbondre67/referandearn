@@ -1,13 +1,13 @@
 
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 interface AutohideSnackbarProps {
     open: boolean;
     message: string | null;
     severity: 'error' | 'success' | 'info' | 'warning';
-    onClose: (event: React.SyntheticEvent<any> | Event, reason?: SnackbarCloseReason) => void;
-  }
+    onClose: () => void;
+}
   export default function AutohideSnackbar({ open, message ,onClose , severity}: AutohideSnackbarProps) {
     return (
       <div>
@@ -16,7 +16,6 @@ interface AutohideSnackbarProps {
           open={open}
           autoHideDuration={2000}
           message={message}
-          onClose={onClose}
         >
             <Alert
           onClose={onClose}

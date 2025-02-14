@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import AutohideSnackbar from './SnackBar';
-import { SnackbarCloseReason, AlertColor } from '@mui/material';
+import {  AlertColor } from '@mui/material';
 
 // interface FormData {
 //   referee_email: string;
@@ -26,10 +26,8 @@ const Hero: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
   const [severity, setSeverity] = React.useState<AlertColor>('error');
 
-  const handleCloseSnackbar = (event:  Event | undefined, reason?: SnackbarCloseReason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  const handleCloseSnackbar = () => {
+
     setSnackbarOpen(false);
   };
 
@@ -41,13 +39,21 @@ const Hero: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
+  interface FormData {
+    referee_email?: string;  
+    referrer_email?: string;
+    referrer_name?: string;
+    referee_name?: string;
+    course?: string;
+  }
+
+  const onSubmit = async (data: FormData) => {
     const { referee_email, referrer_name, referee_name, course } = data;
     console.log(data);
     const formData = {
-      service_id: import.meta.env.VITE_SERVICE_ID,
-      template_id: import.meta.env.VITE_TEMPLATE_ID,
-      user_id: import.meta.env.VITE_USER_ID,
+      service_id: import.meta.env.VITE_SERVICE_ID as string,
+      template_id: import.meta.env.VITE_TEMPLATE_ID as string,
+      user_id: import.meta.env.VITE_USER_ID as string,
       template_params: {
         receiverName: referee_name,
         senderName: referrer_name,

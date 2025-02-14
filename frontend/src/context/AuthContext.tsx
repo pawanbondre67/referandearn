@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AutohideSnackbar from '../components/SnackBar';
-import { SnackbarCloseReason } from '@mui/material';
+import { AlertColor, SnackbarCloseReason } from '@mui/material';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSeverity('success');
   };
 
-  const handleCloseSnackbar = (event: Event, reason?: SnackbarCloseReason) => {
+  const handleCloseSnackbar = (reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }
