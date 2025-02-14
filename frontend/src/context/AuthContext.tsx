@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState,useEffect, useContext, ReactNode } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AutohideSnackbar from '../components/SnackBar';
@@ -22,6 +22,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [severity, setSeverity] = React.useState<AlertColor>('error');
   const baseUrl = import.meta.env.VITE_BASE_URL;
   console.log('baseUrl',baseUrl); 
+
+ 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+      console.log('Token found, setting isAuthenticated to true');
+    } else {
+      console.log('No token found, setting isAuthenticated to false');
+    }
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     try {

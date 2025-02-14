@@ -5,8 +5,15 @@ import SignIn from './components/SignInPage';
 import SignUp from './components/SIgnUpPage';
 import CssBaseline from '@mui/material/CssBaseline';
 import Home from './Home';
-import { AuthProvider } from './context/AuthContext';
-import PrivateRoute from './context/PrivateRoute';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+
+
+const ProtectedRoute: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
+  return isAuthenticated ? <Home /> : <SignIn />;
+};
 
 const App: React.FC = () => {
   return (
@@ -14,7 +21,7 @@ const App: React.FC = () => {
       <AuthProvider>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<PrivateRoute />}>
+          <Route path="/" element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
           </Route>
           <Route path="/signin" element={<SignIn />} />
