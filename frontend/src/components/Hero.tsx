@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -10,25 +9,22 @@ import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import AutohideSnackbar from './SnackBar';
-// import { useNavigate } from 'react-router-dom';
+import { SnackbarCloseReason, AlertColor } from '@mui/material';
 
-const Hero : React.FC = () => {
-//   const navigate = useNavigate();
-
+const Hero: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [message, setMessage] = React.useState<string | null>('');
   const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
-const [severity, setSeverity] = React.useState('error');
+  const [severity, setSeverity] = React.useState<AlertColor>('error');
 
-  const handleCloseSnackbar = (event: React.SyntheticEvent<any> | Event, reason?: SnackbarCloseReason) => {
+  const handleCloseSnackbar = (reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }
     setSnackbarOpen(false);
   };
 
-
-  const baseUrl = import.meta.env.VITE_BASE_URL ;
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   const {
     register,
     handleSubmit,
@@ -36,63 +32,56 @@ const [severity, setSeverity] = React.useState('error');
     formState: { errors },
   } = useForm();
 
+  const onSubmit = async (data: { referee_email: string; referrer_name: string; referee_name: string; course: string; }) => {
+    const { referee_email, referrer_name, referee_name, course } = data;
+    console.log(data);
+    const formData = {
+      service_id: import.meta.env.VITE_SERVICE_ID,
+      template_id: import.meta.env.VITE_TEMPLATE_ID,
+      user_id: import.meta.env.VITE_USER_ID,
+      template_params: {
+        receiverName: referee_name,
+        senderName: referrer_name,
+        receiverEmail: referee_email,
+        courseName: course,
+      },
+    };
 
-  const onSubmit = async (data) => {
-    const { referee_email , referrer_name , referee_name ,course} = data;
-        console.log(data);
-        const formData = {
-        
-            service_id: import.meta.env.VITE_SERVICE_ID,
-            template_id: import.meta.env.VITE_TEMPLATE_ID,
-            user_id: import.meta.env.VITE_USER_ID,
-            template_params: {
-                receiverName: referee_name,
-                senderName: referrer_name,
-                receiverEmail: referee_email,
-                courseName: course,
-            },
-          };
-    
-    
-        try {
-          const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-          await axios.post(`${baseUrl}/referrals/create-referral`, data,{
-            headers: {
-              Authorization: `Bearer ${token}`,
-          },
-          });
+    try {
+      const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+      await axios.post(`${baseUrl}/referrals/create-referral`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      setSnackbarOpen(true);
+      setMessage("Referral submitted successfully!");
+      setSeverity('success');
+      reset();
+      setIsOpen(false);
+
+      try {
+        const response = await axios.post("https://api.emailjs.com/api/v1.0/email/send", formData);
+        setSnackbarOpen(true);
+        setMessage("Email sent successfully!");
+        console.log("Email sent successfully:", response.data);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error sending email:", error);
           setSnackbarOpen(true);
-          setMessage("Referral submitted successfully!")
-          setSeverity('success');
-          // alert("Referral submitted successfully!");
-          
-          reset();
-          setIsOpen(false);
-          try {
-            const response = await axios.post("https://api.emailjs.com/api/v1.0/email/send", formData);
-
-            setSnackbarOpen(true);
-            setMessage("Email sent successfully!");
-
-            console.log("Email sent successfully:", response.data);
-          } catch (error) {
-            console.error("Error sending email:", error);
-            setSnackbarOpen(true);
-            setMessage(error.response?.data || error.message);
-            setSeverity('error');
-            
-          }
-    
-        } catch (error) {
-          console.error(error);
-          setSnackbarOpen(true);
-          setMessage(error.response?.data || error.message);
+          setMessage(error.message);
           setSeverity('error');
         }
-      };
-
-
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setSnackbarOpen(true);
+        setMessage(error.message);
+        setSeverity('error');
+      }
+    }
+  };
 
   return (
     <Box
@@ -104,7 +93,7 @@ const [severity, setSeverity] = React.useState('error');
           'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)',
       }}
     >
-      <AutohideSnackbar open={snackbarOpen} message={message} severity={severity}  onClose={handleCloseSnackbar} />
+      <AutohideSnackbar open={snackbarOpen} message={message} severity={severity} onClose={handleCloseSnackbar} />
       <Container
         sx={{
           display: 'flex',
@@ -132,9 +121,9 @@ const [severity, setSeverity] = React.useState('error');
             <Typography
               component="span"
               variant="h1"
-              sx={{ fontSize: 'inherit', color: 'primary.main' , fontWeight: 'bold'} }
+              sx={{ fontSize: 'inherit', color: 'primary.main', fontWeight: 'bold' }}
             >
-             Earn
+              Earn
             </Typography>
           </Typography>
           <Typography
@@ -144,28 +133,25 @@ const [severity, setSeverity] = React.useState('error');
               width: { sm: '100%', md: '80%' },
             }}
           >
-           Welcome to Accredian, your gateway to premier online programs from India's top universities, tailored for career success.
+            Welcome to Accredian, your gateway to premier online programs from India's top universities, tailored for career success.
           </Typography>
           <Stack
             direction={{ xs: 'row', sm: 'row' }}
             spacing={1}
-            sx={{ pt: 2, width: { xs: '100%', sm: '350px' } , justifyContent: 'center'}}
-            >
+            sx={{ pt: 2, width: { xs: '100%', sm: '350px' }, justifyContent: 'center' }}
+          >
             <Button
               variant="contained"
               color="primary"
               size="small"
-              
-              sx={{ minWidth: 'fit-content',elevation:24 }}
-              onClick={()=>{setIsOpen(true)}}
+              sx={{ minWidth: 'fit-content', elevation: 24 }}
+              onClick={() => { setIsOpen(true) }}
             >
               Refer now
             </Button>
           </Stack>
         </Stack>
       </Container>
-
-
 
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <Box
@@ -225,16 +211,14 @@ const [severity, setSeverity] = React.useState('error');
               error={!!errors.course}
               helperText={errors.course ? "Required" : ""}
             />
-            <Button type="submit"  variant="contained" fullWidth>
+            <Button type="submit" variant="contained" fullWidth>
               Submit Referral
             </Button>
           </form>
         </Box>
       </Modal>
-
     </Box>
   );
 }
-
 
 export default Hero;

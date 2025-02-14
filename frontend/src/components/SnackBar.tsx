@@ -5,7 +5,7 @@ import Alert from '@mui/material/Alert';
 interface AutohideSnackbarProps {
     open: boolean;
     message: string | null;
-    severity: string;
+    severity: 'error' | 'success' | 'info' | 'warning';
     onClose: (event: React.SyntheticEvent<any> | Event, reason?: SnackbarCloseReason) => void;
   }
   export default function AutohideSnackbar({ open, message ,onClose , severity}: AutohideSnackbarProps) {

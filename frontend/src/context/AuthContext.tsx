@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AutohideSnackbar from '../components/SnackBar';
+import { SnackbarCloseReason } from '@mui/material';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -32,14 +33,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         navigate("/");
         setMessage("You have been signed in successfully.");
       }
-    } catch (error) {
-      setSeverity('error');
-      setMessage(error?.response?.data?.error);
-      setSnackbarOpen(true);
-      
-
-     
-    }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setSeverity('error');
+        setMessage(error.message);
+        setSnackbarOpen(true);
+      }
+  }
   };
 
   const signUp = async (email: string, password: string) => {
@@ -53,15 +53,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setMessage("You have been signed up successfully.");
         setSeverity('success');
       }
-    } catch (error) {
-      setMessage(error?.response?.data?.error);
-      setSeverity('error');
-      setSnackbarOpen(true);
-
-  
-     
-     
-    }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setSeverity('error');
+        setMessage(error.message);
+        setSnackbarOpen(true);
+      }
+  }
   };
 
   const signOut = () => {
