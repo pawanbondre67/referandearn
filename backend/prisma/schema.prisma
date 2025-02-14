@@ -1,0 +1,30 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  referrals Referral[]
+}
+
+model Referral {
+  id             Int      @id @default(autoincrement())
+  referrer_name  String
+  referrer_email String
+  referee_name   String
+  referee_email  String
+  course         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+}
