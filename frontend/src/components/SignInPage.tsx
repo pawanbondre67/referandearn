@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
+
 export default function SignIn() {
   const { signIn } = useAuth();
   const [emailError, setEmailError] = React.useState(false);
@@ -41,9 +42,9 @@ export default function SignIn() {
       setEmailErrorMessage('');
     }
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 4) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Password must be at least 4 characters long.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -155,6 +156,7 @@ export default function SignIn() {
             </Typography>
           </Box>
         </Card>
+        
         {error && <Typography color="error" sx={{ marginTop: 2 }}>{error}</Typography>}
       </Stack>
     </>

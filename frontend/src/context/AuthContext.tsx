@@ -32,11 +32,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAuthenticated(true);
         navigate("/");
         setMessage("You have been signed in successfully.");
+        setSeverity('success');
+        setSnackbarOpen(true);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
         setSeverity('error');
-        setMessage(error.message);
+        if(error.message === 'Request failed with status code 401'){
+          setMessage('Invalid credentials');
+        }
+        console.log('error',error);
         setSnackbarOpen(true);
       }
   }
@@ -52,6 +57,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         navigate("/");
         setMessage("You have been signed up successfully.");
         setSeverity('success');
+        setSnackbarOpen(true);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
