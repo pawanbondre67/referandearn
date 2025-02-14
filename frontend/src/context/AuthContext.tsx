@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = useNavigate();
   const [message, setMessage] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [severity, setSeverity] = useState('error');
+  const [severity, setSeverity] = React.useState<AlertColor>('error');
   const baseUrl = import.meta.env.VITE_BASE_URL;
   console.log('baseUrl',baseUrl); 
 

@@ -11,13 +11,22 @@ import { useForm } from 'react-hook-form';
 import AutohideSnackbar from './SnackBar';
 import { SnackbarCloseReason, AlertColor } from '@mui/material';
 
+// interface FormData {
+//   referee_email: string;
+//   referrer_email: string;
+//   referrer_name: string;
+//   referee_name: string;
+//   course: string;
+// }
+
+
 const Hero: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [message, setMessage] = React.useState<string | null>('');
   const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
   const [severity, setSeverity] = React.useState<AlertColor>('error');
 
-  const handleCloseSnackbar = (reason?: SnackbarCloseReason) => {
+  const handleCloseSnackbar = (event:  Event | undefined, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -32,7 +41,7 @@ const Hero: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data: { referee_email: string; referrer_name: string; referee_name: string; course: string; }) => {
+  const onSubmit = async (data) => {
     const { referee_email, referrer_name, referee_name, course } = data;
     console.log(data);
     const formData = {
