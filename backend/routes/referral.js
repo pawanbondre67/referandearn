@@ -5,6 +5,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.post("/create-referral", authMiddleware, createReferral);
-router.get("/", authMiddleware, getReferrals);
+router.get("/get-referrals", authMiddleware, getReferrals);
 
 module.exports = router;
