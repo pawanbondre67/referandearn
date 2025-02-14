@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSeverity('success');
   };
 
-  const handleCloseSnackbar = (event: React.SyntheticEvent<any> | Event, reason?: SnackbarCloseReason) => {
+  const handleCloseSnackbar = (event: Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }
